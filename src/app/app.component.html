@@ -1,0 +1,225 @@
+<div class="container content">
+  <div class="row center">
+    <div class="col-md-2 side-col" [ngClass]="{'app-correct-ht':correctHt()}">
+    </div>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-5">
+      <div class="form-af">
+        <form [formGroup]="analyticalForm">
+          <div class="form-group required">
+            <label for="email">Analytical Method ID</label>
+            <input type="text" class="form-control" formControlName="analyticalMethodId">
+          </div>
+          <div class="form-group required">
+            <label for="pwd">Target Residue Type</label>
+            <select formControlName="targetResidueType" class="form-control" (change)="onChange($event.target.value)">
+              <option *ngFor="let item of analyticalService.residueDetails" value="{{item.id}}">{{item.name}}</option>
+            </select>
+          </div>
+
+          <div class="row" *ngIf="isShowLODetails">
+            <div class="col-md-6">
+              <div class="form-group required">
+                <label for="pwd">LOD(in ppm)</label>
+                <input type="text" class="form-control" formControlName="lod">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group required">
+                <label for="pwd">LOQ(in ppm)</label>
+                <input type="text" class="form-control" formControlName="loq">
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn custom-open custom-top" *ngIf="!isShowLOSwabDetails && isShowLODetails"
+            (click)="openSwab()">⨁Configure Swab Sampling Parameter</button>
+          <button type="button" class="btn custom-close custom-top" *ngIf="isShowLOSwabDetails" (click)="openSwab()">Remove Swab
+            Sampling Parameter</button>
+
+          <div class="card custom-card" *ngIf="isShowLOSwabDetails">
+            <div class="card-body">
+              <div class="form-group required">
+                <label for="pwd">Method Used</label>
+                <input type="text" class="form-control" formControlName="swabMethodUsed">
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group required">
+                    <label for="pwd">Solvent Name</label>
+                    <input type="text" class="form-control" formControlName="swabSolventName">
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group required">
+                    <label for="pwd">Solvent Quantity</label>
+                    <input type="text" class="form-control" formControlName="swabSolventQty">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group required">
+                <label for="pwd">Default Recovery(%)</label>
+                <input type="text" class="form-control" formControlName="swabDefaultRecovery">
+              </div>
+              <button type="button" class="btn custom-open" *ngIf="!isShowLOSwabMoc" (click)="addSwabMoc()">Add
+                MOC</button>
+
+              <div class="card inner-custom-card" *ngIf="isShowLOSwabMoc">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <div class="form-group required">
+                        <label for="pwd">Target Residue Type</label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-5">
+                      <div class="form-group required">
+                        <label for="pwd">Target Residue Type</label>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                  </div>
+                  <ng-container *ngFor="let item of getSwabMOCFormControls(); let i = index;">
+                    <div formArrayName="swabMOC">
+                      <div [formGroupName]="i">
+                          <div class="row">
+                              <div class="col-md-5">
+                                <div class="form-group">
+                                    <select formControlName="MocType" class="form-control">
+                                        <option *ngFor="let item of analyticalService.MOCDetails" value="{{item.id}}">{{item.name}}</option>
+                                      </select>
+                                </div>
+                              </div>
+          
+                              <div class="col-md-5">
+                                <div class="form-group">
+                                  <input type="text" class="form-control" formControlName="RecoveryPercentage">
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <button type="button" class="btn btn-link" (click)="removeMOC(i)">X</button>
+                              </div>
+                            </div>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <button type="button" class="btn btn-link" (click)="AddLOMOC()" >Add another or create new MOC</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn custom-open custom-top" *ngIf="!isShowLORinseDetails && isShowLODetails"
+            (click)="openRinse()">⨁Configure Rinse Sampling Parameter</button>
+          <button type="button" class="btn custom-close custom-top" *ngIf="isShowLORinseDetails" (click)="openRinse()">Remove Rinse
+            Sampling Parameter</button>
+
+
+            <div class="card custom-card" *ngIf="isShowLORinseDetails">
+                <div class="card-body">
+                  <div class="form-group required">
+                    <label for="pwd">Method Used</label>
+                    <input type="text" class="form-control" formControlName="rinseMethodUsed">
+                  </div>
+    
+                  <div class="form-group required">
+                    <label for="pwd">Default Recovery(%)</label>
+                    <input type="text" class="form-control" formControlName="rinseDefaultRecovery">
+                  </div>
+                  <button type="button" class="btn custom-open" *ngIf="!isShowLORinseMoc" (click)="addRinseMoc()">Add
+                    MOC</button>
+    
+                  <div class="card inner-custom-card" *ngIf="isShowLORinseMoc">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-5">
+                          <div class="form-group required">
+                            <label for="pwd">Target Residue Type</label>
+                          </div>
+                        </div>
+    
+                        <div class="col-md-5">
+                          <div class="form-group required">
+                            <label for="pwd">Target Residue Type</label>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                      </div>
+                      <ng-container *ngFor="let item of getRinseMOCFormControls(); let i = index;">
+                        <div formArrayName="rinseMOC">
+                          <div [formGroupName]="i">
+                              <div class="row">
+                                  <div class="col-md-5">
+                                    <div class="form-group">
+                                        <select formControlName="MocType" class="form-control">
+                                            <option *ngFor="let item of analyticalService.MOCDetails" value="{{item.id}}">{{item.name}}</option>
+                                          </select>
+                                    </div>
+                                  </div>
+              
+                                  <div class="col-md-5">
+                                    <div class="form-group">
+                                      <input type="text" class="form-control" formControlName="RecoveryPercentage">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <button type="button" class="btn btn-link" (click)="removeRinseMOC(i)">X</button>
+                                  </div>
+                                </div>
+                          </div>
+                        </div>
+                      </ng-container>
+    
+                      <button type="button" class="btn btn-link" (click)="AddRinseLOMOC()" >Add another or create new MOC</button>
+                    </div>
+    
+                  </div>
+                </div>
+              </div>
+
+
+          <div class="form-group required">
+            <label for="pwd">Reason</label>
+            <input type="text" class="form-control" formControlName="reason">
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <div class="col-md-3">
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="page-footer font-small blue fixed-bottom">
+
+  <!-- Copyright -->
+  <div class="footer-copyright py-2 layer-2">
+      <div class="container content">
+          <div class="row">
+            <div class="col-md-2">
+                <button type="button" class="btn btn-light" (click)="ResetForm()">Cancel</button>
+            </div>
+            <div class="col-md-8">
+                ffg
+              </div>
+              <div class="col-md-2">
+                  <button type="button" class="btn btn-primary" (click)="saveData()">Update</button>
+                </div>
+          </div>
+        </div>
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
