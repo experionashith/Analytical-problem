@@ -24,7 +24,7 @@
     "core-js": "^2.5.4",
     "lodash": "^4.17.11",
     "ngx-bootstrap": "^4.0.1",
-    "rxjs": "^6.0.0",
+    "rxjs": "6.0.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -34,7 +34,7 @@
     "@angular/language-service": "^6.1.0",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
-    "@types/lodash": "^4.14.123",
+    "@types/lodash": "4.14.118",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
     "jasmine-core": "~2.99.1",
